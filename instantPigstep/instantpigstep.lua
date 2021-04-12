@@ -1,10 +1,12 @@
+fuckingThirtytwothousandSevenhundredSixtyEight = 32768
+
 mon = peripheral.find("monitor")
 mon.setTextScale(0.5)
 mon.clear()
 local line = "               "
 local function drawPig(up, looking)
 	--top line black if necessary
-	mon.setBackgroundColor(32768)
+	mon.setBackgroundColor(fuckingThirtytwothousandSevenhundredSixtyEight)
 	if not up then
 		mon.setCursorPos(1,1)
 		mon.write(line)
@@ -21,7 +23,7 @@ local function drawPig(up, looking)
 		mon.write(line)
 	end
 	--bottom line black if necessary
-	mon.setBackgroundColor(32768)
+	mon.setBackgroundColor(fuckingThirtytwothousandSevenhundredSixtyEight)
 	if up then
 		mon.setCursorPos(1,10)
 		mon.write(line)
@@ -50,7 +52,7 @@ local function drawPig(up, looking)
 	mon.write(eyeball)
 	-- pupils
 	local pupil = "  "
-	mon.setBackgroundColor(32768)
+	mon.setBackgroundColor(fuckingThirtytwothousandSevenhundredSixtyEight)
 	local leftPos = (looking == "right") and 3 or 1
 	local rightPos = (looking == "left") and 12 or 14
 	mon.setCursorPos(leftPos, height)
@@ -60,7 +62,7 @@ local function drawPig(up, looking)
 end
 
 local function drawPrompt()
-	mon.setBackgroundColor(32768)
+	mon.setBackgroundColor(fuckingThirtytwothousandSevenhundredSixtyEight)
 	mon.setTextColor(4)
 	mon.clear()
 	mon.setCursorPos(3,5)
