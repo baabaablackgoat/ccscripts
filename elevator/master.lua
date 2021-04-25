@@ -57,6 +57,7 @@ function updateControl()
 		m.transmit(1,2,"go")
 	else
 		m.transmit(1,2,"stop")
+		m.transmit(1,2,"chime_"..tostring(curFloor))
 	end
 end
 

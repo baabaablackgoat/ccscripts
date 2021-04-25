@@ -1,6 +1,9 @@
 local linkLevel = 0
 local linkName = "Basement"
 
+local chimeSeq = {24, 0.3, 20, 0.3, 17, -1}
+local chimeInstr = "guitar"
+
 local m = peripheral.find("modem")
 m.open(1)
 m.open(3)
@@ -8,6 +11,8 @@ m.open(3)
 local s = peripheral.find("monitor")
 s.setBackgroundColor(32678)
 s.clear()
+
+local a = peripheral.find("speaker")
 
 local curFloor = nil
 local levels = {}
@@ -36,6 +41,8 @@ function ident()
 	print("sent ident")
 end
 
+
+
 ident() -- run once on startup
 
 function updateScreen()
@@ -55,6 +62,19 @@ function updateScreen()
 	end
 end
 
+local chimeTimerID = nil
+local chimePos = 0
+
+function chime()
+	if a == nil then return end
+	a.playNote(chimeInstr, 3, chimeSeq[(chimePos * 2) + 1])
+	local delay = chimeSeq[(chimePos * 2) + 2]
+	if delay >= 0 then
+		chimeTimerID = os.startTimer(delay)
+		chimePos = chimePos + 1
+	else chimePos = 0 end
+end
+
 
 
 while true do
@@ -63,6 +83,8 @@ while true do
 		if e2 == 1 then -- listening to controls
 			if e4 == "ident" then
 				ident()
+			elseif e4 == "chime_"..tostring(linkLevel) then
+				chime()
 			elseif type(e4) == "table" then
 				print("recieved floor list")
 				levels = e4
@@ -79,5 +101,8 @@ while true do
 			print("Sending "..msg)
 			m.transmit(3, 1, msg)
 		end
+	elseif event == "timer" and e1 == chimeTimerID then
+		chime()
 	end
+
 end
