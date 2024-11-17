@@ -5,25 +5,44 @@ local nowPlaying = ""
 local currentListIndex = 1
 
 local allSongs = {
-    ["5"] = "minecraft:music_disc.5",
-    ["11"] = "minecraft:music_disc.11",
-    ["13"] = "minecraft:music_disc.13",
-    ["blocks"] = "minecraft:music_disc.blocks",
-    ["cat"] = "minecraft:music_disc.cat",
-    ["chirp"] = "minecraft:music_disc.chirp",
-    ["far"] = "minecraft:music_disc.far",
-    ["mall"] = "minecraft:music_disc.mall",
-    ["mellohi"] = "minecraft:music_disc.mellohi",
-    ["otherside"] = "minecraft:music_disc.otherside",
-    ["pigstep"] = "minecraft:music_disc.pigstep",
-    ["stal"] = "minecraft:music_disc.stal",
-    ["strad"] = "minecraft:music_disc.strad",
-    ["wait"] = "minecraft:music_disc.wait",
-    ["ward"] = "minecraft:music_disc.ward",
-    ["endseeker"] = "betterend:betterend.record.endseeker",
-    ["eo dracona"] = "betterend:betterend.record.eo_dracona",
-    ["grasping at stars"] = "betterend:betterend.record.grasping_at_stars",
-    ["strange and alien"] = "betterend:betterend.record.strange_and_alien"
+    ["5 - Samuel Åberg"] = "minecraft:music_disc.5",
+    ["11 - C418"] = "minecraft:music_disc.11",
+    ["13 - C418"] = "minecraft:music_disc.13",
+    ["blocks - C418"] = "minecraft:music_disc.blocks",
+    ["cat - C418"] = "minecraft:music_disc.cat",
+    ["chirp - C418"] = "minecraft:music_disc.chirp",
+    ["far - C418"] = "minecraft:music_disc.far",
+    ["mall - C418"] = "minecraft:music_disc.mall",
+    ["mellohi - C418"] = "minecraft:music_disc.mellohi",
+    ["Otherside - Lena Raine"] = "minecraft:music_disc.otherside",
+    ["pigstep - Lena Raine"] = "minecraft:music_disc.pigstep",
+    ["stal - C418"] = "minecraft:music_disc.stal",
+    ["strad - C418"] = "minecraft:music_disc.strad",
+    ["wait - C418"] = "minecraft:music_disc.wait",
+    ["ward - C418"] = "minecraft:music_disc.ward",
+    ["Endseeker - Firel (Better End)"] = "betterend:betterend.record.endseeker",
+    ["Eo Dracona - Firel (Better End)"] = "betterend:betterend.record.eo_dracona",
+    ["Grasping At Stars - Firel (Better End)"] = "betterend:betterend.record.grasping_at_stars",
+    ["Strange And Alien - Firel (Better End)"] = "betterend:betterend.record.strange_and_alien",
+    ["Endure Emptiness - Kain Vinosec (Botania)"] = "botania:music.gaia1",
+    ["Fight For Quiescence - Kain Vinosec (Botania)"] = "botania:music.gaia2",
+    ["Creepy (Dimensional Doors)"] = "dimdoors:creepy",
+    ["White Void (Dimensional Doors)"] = "dimdoors:white_void",
+    ["Incarnated Evil - Rotch Gwylt (The Graveyard)"] = "graveyard:entity.lich.theme_01",
+    ["Spectrum Theme (Spectrum)"] = "spectrum:music.spectrum_theme",
+    ["Irrelevance Fading - Radiarc (Spectrum)"] = "spectrum:music.boss_theme",
+    ["Everreflective - Proper Motions (Spectrum)"] = "spectrum:music.divinity",
+    ["Deeper Down (Spectrum)"] = "spectrum:music.deeper_down_theme",
+    ["Radiance - Rotch Gwylt (Twilight Forest)"] = "twilightforest:music_disc.twilightforest.radiance",
+    ["Steps - Rotch Gwylt (Twilight Forest)"] = "twilightforest:music_disc.twilightforest.steps",
+    ["Superstitious - Rotch Gwylt (Twilight Forest)"] = "twilightforest:music_disc.twilightforest.superstitious",
+    ["Home - MrCompost (Twilight Forest)"] = "twilightforest:music_disc.twilightforest.home",
+    ["Wayfarer - MrCompost (Twilight Forest)"] = "twilightforest:music_disc.twilightforest.wayfarer",
+    ["Findings - MrCompost (Twilight Forest)"] = "twilightforest:music_disc.twilightforest.findings",
+    ["Maker - MrCompost (Twilight Forest)"] = "twilightforest:music_disc.twilightforest.maker",
+    ["Thread - MrCompost (Twilight Forest)"] = "twilightforest:music_disc.twilightforest.thread",
+    ["Motion - MrCompost (Twilight Forest)"] = "twilightforest:music_disc.twilightforest.motion",
+    ["A Carol - STiiX (Snowy Spirit)"] = "snowyspirit:music.winter"
 }
 table.sort(allSongs)
 
@@ -34,6 +53,8 @@ function tablelength(T)
 end
 
 local totalSongCount = tablelength(allSongs)
+
+
   
 
 function resetColors()
@@ -42,28 +63,42 @@ function resetColors()
 end
 
 function printControls()
+    -- titlebar (has 1 line of space below)
+    term.setCursorPos(1, 1)
+    term.setBackgroundColor(colors.orange)
+    term.setTextColor(colors.black)
+    local titleSpacing = screenWidth / 2 - 8
+    term.write(string.rep(" ", titleSpacing).."cool jukebox wow"..string.rep(" ", titleSpacing + 1))
+    -- now playing bar (with one line of space)
     term.setCursorPos(1, screenHeight - 1)
     term.setBackgroundColor(colors.gray)
-    term.write("Playing: "..nowPlaying.."                                                   ")
+    term.setTextColor(colors.orange)
+    term.write("\16 "..nowPlaying..string.rep(" ", screenWidth))
+    -- controls bar
+    term.setBackgroundColor(colors.gray)
     term.setCursorPos(middleWidth - 6, screenHeight)
     term.setTextColor((canScrollUp() and colors.white or colors.black))
-    term.write(" ^ ")
+    term.write(" \24 ")
     term.setCursorPos(middleWidth + 3, screenHeight)
     term.setTextColor((canScrollDown() and colors.white or colors.black))
-    term.write(" V ")
+    term.write(" \25 ")
     term.setCursorPos(middleWidth - 3, screenHeight)
     term.setBackgroundColor(colors.red)
     term.setTextColor(colors.white)
     term.write(" STOP ")
     resetColors()
 end
+local usedLines = 5
+local firstLineOffset = 2
 
 function printSongs(startIndex)
     local index = 1
     for k, v in pairs(allSongs) do
-        if index >= startIndex and (index - startIndex) <= screenHeight - 2 then
-            term.setCursorPos(1, index - startIndex + 1)
-            term.write(k)
+        if index >= startIndex and (index - startIndex) <= screenHeight - (usedLines + 1) then
+            term.setCursorPos(1, index - startIndex + 1 + firstLineOffset)
+            if (k == nowPlaying) then term.setTextColor(colors.orange) end
+            term.write((k == nowPlaying and "\16 " or "  ") .. k)
+            resetColors()
         end
         index = index + 1
     end
@@ -86,7 +121,7 @@ function canScrollUp()
 end
 
 function canScrollDown()
-    return (currentListIndex + screenHeight - 2 <= totalSongCount)
+    return (currentListIndex + screenHeight - usedLines <= totalSongCount)
 end
 
 
@@ -113,7 +148,7 @@ end
 
 function interpretMouseClick(button, x, y)
     if button ~= 1 then return end
-    if y == screenHeight - 1 then return end -- now playing row
+    if (y == screenHeight - 1 or y < 2) then return end -- display rows
     if y == screenHeight then
         if (x < middleWidth - 6 or x > middleWidth + 6) then return
         elseif (x > middleWidth - 6 and x < middleWidth - 3) then scrollUp() 
@@ -129,7 +164,7 @@ end
 function getSongByIndex(rowIndex)
     local iterIndex = 1
     for k, v in pairs(allSongs) do
-        if rowIndex + (currentListIndex - 1) == iterIndex then
+        if (rowIndex - firstLineOffset) + (currentListIndex - 1) == iterIndex then
             return k, v
         end
         iterIndex = iterIndex + 1
@@ -137,11 +172,21 @@ function getSongByIndex(rowIndex)
     return nil, nil
 end
 
+function interpretScroll(direction)
+    if (direction == -1) then -- up
+        if canScrollUp() then scrollUp() end
+    elseif (direction == 1) then -- down
+        if canScrollDown() then scrollDown() end
+    else return end
+end
+
 while true do
     term.clear()
     printSongs(currentListIndex)
     printControls()
     printQueuedDebugSymbol()
-    local event, button, x, y = os.pullEvent("mouse_click")
-    interpretMouseClick(button, x, y)
+    local event, a, b, c = os.pullEvent()
+    if (event == "mouse_click") then interpretMouseClick(a, b, c)  -- button, x, y
+    elseif (event == "mouse_scroll") then interpretScroll(a) -- direction, [x, y]
+    else end
 end
